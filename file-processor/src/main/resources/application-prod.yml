@@ -1,0 +1,93 @@
+# 生产环境配置
+# 复制此文件为 application-prod.yml 并填入真实的商户信息
+# 注意：此文件包含敏感信息，请勿提交到代码仓库
+
+server:
+  port: 8080
+  forward-headers-strategy: native
+
+spring:
+  application:
+    name: file-processor
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:filemaster}?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USER:filemaster}
+    password: ${MYSQL_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    database: 0
+    timeout: 5000ms
+    lettuce:
+      pool:
+        max-active: 50
+        max-idle: 20
+        min-idle: 5
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+# 支付配置
+payment:
+  alipay:
+    # 支付宝应用ID（从支付宝开放平台获取）
+    app-id: ${ALIPAY_APP_ID:}
+    # 支付宝应用私钥（RSA2格式）
+    # 请填写应用私钥，注意不要包含空格和换行符
+    private-key: ${ALIPAY_PRIVATE_KEY:}
+    # 支付宝公钥（不是应用公钥）
+    # 从支付宝开放平台获取
+    public-key: ${ALIPAY_PUBLIC_KEY:}
+    # 支付宝网关地址
+    # 沙箱环境：https://openapi.alipaydev.com/gateway.do
+    # 生产环境：https://openapi.alipay.com/gateway.do
+    server-url: ${ALIPAY_SERVER_URL:https://openapi.alipay.com/gateway.do}
+    # 支付宝异步通知地址（必须外网可访问，使用HTTPS）
+    # 格式：https://your-domain.com/api/payment/alipay/notify
+    notify-url: ${ALIPAY_NOTIFY_URL:}
+    # 支付宝同步跳转地址（支付成功后跳转）
+    # 格式：https://your-domain.com/payment/success
+    return-url: ${ALIPAY_RETURN_URL:}
+
+  wechat:
+    # 微信支付商户号（从微信支付平台获取）
+    mch-id: ${WECHAT_MCH_ID:}
+    # 微信应用ID（公众号或小程序APPID）
+    app-id: ${WECHAT_APP_ID:}
+    # 微信支付API v3密钥（从微信支付平台获取）
+    # 用于加密回调消息和验证签名
+    api-v3-key: ${WECHAT_API_V3_KEY:}
+    # 商户证书序列号（从微信支付平台获取）
+    # 格式：34位十六进制字符串
+    mch-serial-no: ${WECHAT_MCH_SERIAL_NO:}
+    # 商户证书私钥文件路径
+    # 从微信支付平台下载的apiclient_key.pem文件
+    private-key-path: ${WECHAT_PRIVATE_KEY_PATH:/etc/filemaster/certs/apiclient_key.pem}
+    # 微信支付异步通知地址（必须外网可访问，使用HTTPS）
+    # 格式：https://your-domain.com/api/payment/wechat/notify
+    notify-url: ${WECHAT_NOTIFY_URL:}
+
+# 文件存储配置
+storage:
+  type: ${STORAGE_TYPE:local}
+  local:
+    base-path: ${STORAGE_BASE_PATH:/data/filemaster/files}
+  minio:
+    endpoint: ${MINIO_ENDPOINT:}
+    access-key: ${MINIO_ACCESS_KEY:}
+    secret-key: ${MINIO_SECRET_KEY:}
+    bucket: ${MINIO_BUCKET:filemaster}
+
+# 日志配置
+logging:
+  level:
+    com.fileprocessor: INFO
+    com.alipay: INFO
+    com.wechat.pay: INFO
+  file:
+    name: /var/log/filemaster/application.log
+    max-size: 100MB
+    max-history: 30

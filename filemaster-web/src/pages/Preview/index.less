@@ -1,0 +1,37 @@
+.preview-page {
+  height: calc(100vh - 160px);
+  background: #f0f2f5;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .preview-container {
+    height: 100%;
+    background: #fff;
+  }
+
+  .preview-loading {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .preview-unsupported {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+}
+
+.dark {
+  .preview-page {
+    background: #141414;
+
+    .preview-container {
+      background: #1f1f1f;
+    }
+  }
+}

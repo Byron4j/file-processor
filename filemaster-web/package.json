@@ -1,0 +1,50 @@
+{
+  "name": "filemaster-web",
+  "description": "FileMaster Pro - 企业级文件处理平台前端",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,less}\""
+  },
+  "dependencies": {
+    "@ant-design/icons": "^6.1.1",
+    "antd": "^5.29.3",
+    "axios": "^1.15.0",
+    "dayjs": "^1.11.20",
+    "i18next": "^26.0.4",
+    "mammoth": "^1.12.0",
+    "pdfjs-dist": "^5.6.205",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-i18next": "^17.0.2",
+    "react-router-dom": "^6.30.3",
+    "video.js": "^8.23.7",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/node": "^24.12.2",
+    "@types/pdfjs-dist": "^2.10.377",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/video.js": "^7.3.58",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.4.0",
+    "less": "^4.6.4",
+    "less-loader": "^12.3.2",
+    "prettier": "^3.8.2",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.58.0",
+    "vite": "^8.0.4"
+  }
+}

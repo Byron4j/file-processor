@@ -4,8 +4,10 @@ public class FileResponse {
 
     private boolean success;
     private String message;
+    private String fileId;
     private String filePath;
     private Long fileSize;
+    private Object data;
 
     public FileResponse() {
     }
@@ -37,6 +39,14 @@ public class FileResponse {
         this.message = message;
     }
 
+    public String getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
+    }
+
     public String getFilePath() {
         return filePath;
     }
@@ -53,11 +63,20 @@ public class FileResponse {
         this.fileSize = fileSize;
     }
 
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
     @Override
     public String toString() {
         return "FileResponse{" +
                 "success=" + success +
                 ", message='" + message + '\'' +
+                ", fileId='" + fileId + '\'' +
                 ", filePath='" + filePath + '\'' +
                 ", fileSize=" + fileSize +
                 '}';
@@ -66,8 +85,10 @@ public class FileResponse {
     public static class Builder {
         private boolean success;
         private String message;
+        private String fileId;
         private String filePath;
         private Long fileSize;
+        private Object data;
 
         public Builder success(boolean success) {
             this.success = success;
@@ -76,6 +97,11 @@ public class FileResponse {
 
         public Builder message(String message) {
             this.message = message;
+            return this;
+        }
+
+        public Builder fileId(String fileId) {
+            this.fileId = fileId;
             return this;
         }
 
@@ -89,8 +115,16 @@ public class FileResponse {
             return this;
         }
 
+        public Builder data(Object data) {
+            this.data = data;
+            return this;
+        }
+
         public FileResponse build() {
-            return new FileResponse(success, message, filePath, fileSize);
+            FileResponse response = new FileResponse(success, message, filePath, fileSize);
+            response.setFileId(fileId);
+            response.setData(data);
+            return response;
         }
     }
 }

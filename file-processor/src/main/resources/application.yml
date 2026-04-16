@@ -11,25 +11,143 @@ spring:
       max-request-size: 100MB
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:fileprocessor;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:fileprocessor;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
     username: sa
     password:
+    schema: classpath:db/schema.sql
   h2:
     console:
       enabled: true
       path: /h2-console
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 50
+        queue-capacity: 200
+        keep-alive: 60s
+      thread-name-prefix: task-
 
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    db-config:
-      logic-delete-field: deleted
-      logic-delete-value: 1
-      logic-not-delete-value: 0
+  type-handlers-package: com.fileprocessor.handler
 
+custom:
+  file:
+    upload:
+      path: ./uploads/
+    output:
+      path: ./outputs/
+
+# Storage configuration
+storage:
+  default: LOCAL
+  local:
+    base-path: ./uploads
+    url-prefix: /uploads
+  minio:
+    enabled: false
+    endpoint: http://localhost:9000
+    access-key: ${MINIO_ACCESS_KEY:}
+    secret-key: ${MINIO_SECRET_KEY:}
+    bucket: file-processor
+  aliyun-oss:
+    enabled: false
+    endpoint: oss-cn-beijing.aliyuncs.com
+    access-key-id: ${OSS_ACCESS_KEY_ID:}
+    access-key-secret: ${OSS_ACCESS_KEY_SECRET:}
+    bucket: file-processor
+
+# Async task settings
+async:
+  task:
+    timeout: 300000  # 5 minutes
+    max-retry: 3
+    callback:
+      timeout: 10000
+      retry-interval: 5000
+
+# AI Configuration
+ai:
+  provider: claude  # claude or openai
+  claude:
+    api-key: ${CLAUDE_API_KEY:}
+    model: claude-3-sonnet-20240229
+  openai:
+    api-key: ${OPENAI_API_KEY:}
+    model: gpt-4-turbo-preview
+  max-tokens: 4096
+  temperature: 0.5
+
+# Media Processing (includes enhancement)
+media:
+  ffmpeg:
+    path: ffmpeg               # System FFmpeg path
+    timeout: 600               # seconds
+  whisper:
+    mode: api                  # api or local
+    api-key: ${OPENAI_API_KEY:}
+    model: whisper-1
+    local-url: http://localhost:9000/asr
+  subtitle:
+    default-font: "Arial"
+    default-font-size: 24
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:mySecretKeyForJwtTokenGenerationShouldBeAtLeast256BitsLong}
+  access-token-expiration: 86400000    # 24 hours in milliseconds
+  refresh-token-expiration: 604800000  # 7 days in milliseconds
+
+# User Quota Configuration
+quota:
+  default-storage: 10737418240      # 10 GB in bytes
+  default-daily-upload: 1073741824  # 1 GB in bytes
+  default-max-files: 10000          # Max files per user
+
+# Recycle Bin Configuration
+recycle-bin:
+  retention-days: 30                # Days to keep files in recycle bin
+
+# OCR Configuration
+ocr:
+  default-engine: tesseract         # tesseract, paddle, baidu, tencent
+  tesseract:
+    data-path: /usr/share/tesseract-ocr/4.00/tessdata
+    default-language: chi_sim+eng
+  paddle:
+    model-path: ./models
+    use-gpu: false
+  baidu:
+    app-id: ${BAIDU_OCR_APP_ID:}
+    api-key: ${BAIDU_OCR_API_KEY:}
+    secret-key: ${BAIDU_OCR_SECRET_KEY:}
+  tencent:
+    secret-id: ${TENCENT_OCR_SECRET_ID:}
+    secret-key: ${TENCENT_OCR_SECRET_KEY:}
+
+# Document Conversion
+conversion:
+  libreoffice:
+    path: /usr/lib/libreoffice
+    timeout: 300
+
+# File Version Management
 file:
-  upload:
-    path: ./uploads/
+  version:
+    max-count: 10              # Max versions per file
+    storage-path: ./versions   # Version storage path
   output:
-    path: ./outputs/
+    path: ./outputs
+
+# ClamAV Virus Scanning
+clamav:
+  enabled: false
+  host: localhost
+  port: 3310
+  timeout: 30000
+
+# Encryption Configuration
+encryption:
+  master-key: ${ENCRYPTION_MASTER_KEY:FileMasterProDefaultEncryptionKeyChangeInProduction}

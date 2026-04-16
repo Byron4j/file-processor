@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: file-processor-test
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# JWT Configuration
+jwt:
+  secret: test-secret-key-for-jwt-signing-in-test-environment-only-do-not-use-in-production
+  expiration: 86400000
+  refresh-expiration: 604800000
+
+# File storage
+file:
+  storage:
+    path: ./test-files/
+    max-size: 104857600
+
+# AI Configuration (mock for tests)
+ai:
+  provider: mock
+  openai:
+    api-key: test-key
+    model: gpt-3.5-turbo
+  anthropic:
+    api-key: test-key
+    model: claude-3-haiku-20240307
+
+# Logging
+logging:
+  level:
+    com.fileprocessor: DEBUG
+    org.springframework.security: DEBUG
